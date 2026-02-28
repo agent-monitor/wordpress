@@ -68,16 +68,38 @@ function agent_monitor_is_system_request($request_path): bool {
 }
 
 function agent_monitor_get_request_headers(): array {
-    $whitelist = [
+    $allowed_headers = [
+        'User-Agent',
+        'Referer',
+        'Host',
+        'From',
+        'Origin',
+        'Accept',
+        'Accept-Language',
+        'Accept-Encoding',
+        'Connection',
+        'DNT',
+        'X-Country-Code',
         'Signature',
         'Signature-Agent',
         'Signature-Input',
-        'Origin',
-        'Referer',
-        'From',
-        'Accept-Language',
-        'User-Agent',
-        'X-Country-Code',
+        'Content-Type',
+        'Content-Length',
+        'Content-Encoding',
+        'Content-Language',
+        'Sec-Fetch-Site',
+        'Sec-Fetch-Mode',
+        'Sec-Fetch-User',
+        'Sec-Fetch-Dest',
+        'Sec-CH-UA',
+        'Sec-CH-UA-Mobile',
+        'Sec-CH-UA-Platform',
+        'Sec-CH-UA-Platform-Version',
+        'Sec-CH-UA-Arch',
+        'Sec-CH-UA-Bitness',
+        'Sec-CH-UA-Model',
+        'Sec-CH-UA-Full-Version',
+        'Sec-CH-UA-Full-Version-List',
         'Remote-Addr',
         'X-Forwarded-For',
         'X-Real-IP',
@@ -93,11 +115,11 @@ function agent_monitor_get_request_headers(): array {
 
     $request_headers = [];
 
-    foreach ($whitelist as $header_name) {
-        $header_value = agent_monitor_get_request_header_value($header_name);
+    foreach ( $allowed_headers as $header_name ) {
+        $header_value = agent_monitor_get_request_header_value( $header_name );
 
-        if ($header_value) {
-            $request_headers[$header_name] = $header_value;
+        if ( $header_value ) {
+            $request_headers[ $header_name ] = $header_value;
         }
     }
 
