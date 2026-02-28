@@ -4,10 +4,30 @@ if ( ! defined( 'ABSPATH' ) ) {
     exit;
 }
 
-// Register settings
-
 function agent_monitor_register_settings() {
-    register_setting(AGENT_MONITOR_SETTINGS_GROUP, AGENT_MONITOR_TOKEN);
+    register_setting( AGENT_MONITOR_SETTINGS_GROUP, AGENT_MONITOR_TOKEN, array(
+        'type'              => 'string',
+        'label'             => __( 'Site Token', 'agent-monitor' ),
+        'description'       => __( 'The access token linking this site to your Agent Monitor site.', 'agent-monitor' ),
+        'sanitize_callback' => 'sanitize_text_field',
+        'show_in_rest'      => false,
+        'default'           => '',
+    ) );
+
+    register_setting( AGENT_MONITOR_SETTINGS_GROUP, AGENT_MONITOR_LOG_MAX_SIZE, array(
+        'type'              => 'integer',
+        'label'             => __( 'Maximum Log Size', 'agent-monitor' ),
+        'description'       => __( 'Maximum size of the visit log file in megabytes before new visits are dropped.', 'agent-monitor' ),
+        'sanitize_callback' => 'agent_monitor_sanitize_log_max_size',
+        'show_in_rest'      => false,
+        'default'           => 32,
+    ) );
+}
+
+function agent_monitor_sanitize_log_max_size( $value ) {
+    $value = (int) $value;
+    $value = max( 16, min( 128, $value ) );
+    return (int) ( round( $value / 8 ) * 8 );
 }
 
 add_action('admin_init', 'agent_monitor_register_settings');
@@ -26,8 +46,6 @@ function agent_monitor_menu() {
 
 add_action('admin_menu', 'agent_monitor_menu');
 
-// Register settings page
-
 function agent_monitor_page() {
     // Prevent unauthorized access
     if ( ! current_user_can( 'manage_options' ) ) {
@@ -36,7 +54,7 @@ function agent_monitor_page() {
 
     // Detect updates
     if ( isset( $_GET['settings-updated'] ) ) {
-        add_settings_error( 'agent_monitor_messages', 'agent_monitor_message', __( 'Settings Saved', 'agent_monitor' ), 'updated' );
+        add_settings_error( 'agent_monitor_messages', 'agent_monitor_message', __( 'Settings Saved', 'agent-monitor' ), 'updated' );
     }
 
     // show error/update messages
@@ -107,8 +125,17 @@ function agent_monitor_page() {
             padding: 0 16px;
             line-height: 32px;
         }
+
+        #agent-monitor-page form .field-label {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        #agent-monitor-page form input[type=range] {
+            width: 100%;
+        }
     </style>
-    <div ckass="wrap" id="agent-monitor-page">
+    <div class="wrap" id="agent-monitor-page">
         <div class="header">
             <h1><?php echo esc_html( get_admin_page_title() ); ?></h1>
             <a class="secondary-button" href="https://app.agentmonitor.io" target="_blank">Go to Agent Monitor ↗</a>
@@ -121,7 +148,7 @@ function agent_monitor_page() {
                 <p style="font-weight: bold;">How to find your access token</p>
                 <ol>
                     <li>Open your Agent Monitor dashboard in a new tab.</li>
-                    <li>Go to your project's Settings page.</li>
+                    <li>Go to the "Integrate" page.</li>
                     <li>Copy the Site Token provided.</li>
                     <li>Paste your token in the field below and save your changes.</li>
                 </ol>
@@ -131,6 +158,21 @@ function agent_monitor_page() {
                     id="<?php echo esc_attr(AGENT_MONITOR_TOKEN); ?>"
                     name="<?php echo esc_attr(AGENT_MONITOR_TOKEN); ?>"
                     value="<?php echo esc_attr(get_option(AGENT_MONITOR_TOKEN, '')); ?>"
+                />
+            </div>
+            <div>
+                <label class="field-label" for="<?php echo esc_attr( AGENT_MONITOR_LOG_MAX_SIZE ); ?>">
+                    <?php esc_html_e( 'Maximum log file size', 'agent-monitor' ); ?>: <output id="agent-monitor-log-max-size-output"><?php echo esc_html( get_option( AGENT_MONITOR_LOG_MAX_SIZE, 32 ) ); ?></output> MB
+                </label>
+                <input
+                    type="range"
+                    id="<?php echo esc_attr( AGENT_MONITOR_LOG_MAX_SIZE ); ?>"
+                    name="<?php echo esc_attr( AGENT_MONITOR_LOG_MAX_SIZE ); ?>"
+                    min="16"
+                    max="128"
+                    step="8"
+                    value="<?php echo esc_attr( get_option( AGENT_MONITOR_LOG_MAX_SIZE, 32 ) ); ?>"
+                    oninput="document.getElementById('agent-monitor-log-max-size-output').value = this.value"
                 />
             </div>
             <div class="card-footer">
