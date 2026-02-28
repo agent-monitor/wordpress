@@ -28,6 +28,8 @@ function agent_monitor_track_visit() {
     $http_version_parts = isset( $_SERVER['SERVER_PROTOCOL'] ) ? explode( '/', sanitize_text_field( wp_unslash( $_SERVER['SERVER_PROTOCOL'] ) ) ) : [];
     $request_http_version = $http_version_parts[1] ?? false;
 
+    $response_code = http_response_code();
+
     // A valid method is required.
     if (!$request_method) return;
 
@@ -37,13 +39,14 @@ function agent_monitor_track_visit() {
     );
 
     $body = array(
-        'path' => $request_path,
-        'method' => $request_method,
-        'headers' => $request_headers,
-        'query' => $request_query,
-        'http_version' => $request_http_version,
-        'request_time' => $request_time,
-        'source' => 'wordpress/' . AGENT_MONITOR_PLUGIN_VERSION,
+        'path'          => $request_path,
+        'method'        => $request_method,
+        'response_code' => $response_code,
+        'headers'       => $request_headers,
+        'query'         => $request_query,
+        'http_version'  => $request_http_version,
+        'request_time'  => $request_time,
+        'source'        => 'wordpress/' . AGENT_MONITOR_PLUGIN_VERSION,
     );
 
     // Send the data using a non-blocking request for performance.
@@ -54,7 +57,7 @@ function agent_monitor_track_visit() {
     ));
 }
 
-add_action('wp_loaded', 'agent_monitor_track_visit');
+add_action('shutdown', 'agent_monitor_track_visit');
 
 function agent_monitor_is_system_request($request_path): bool {
     return (
