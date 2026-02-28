@@ -1,5 +1,9 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) {
+    exit;
+}
+
 function agent_monitor_track_visit() {
     // Exit early on admin, AJAX or cron requests.
     if ( is_admin() || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) return;
