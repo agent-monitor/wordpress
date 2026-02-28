@@ -28,6 +28,9 @@ if (!defined('ABSPATH')) {
 define('AGENT_MONITOR_PLUGIN_FILE', __FILE__);
 define('AGENT_MONITOR_PLUGIN_VERSION', '0.1.1');
 
-require_once plugin_dir_path(__FILE__) . 'includes/constants.php';
-require_once plugin_dir_path(__FILE__) . 'includes/settings.php';
-require_once plugin_dir_path(__FILE__) . 'includes/server-analytics.php';
+require_once plugin_dir_path( __FILE__ ) . 'includes/constants.php';
+require_once plugin_dir_path( __FILE__ ) . 'includes/file-system.php';
+require_once plugin_dir_path( __FILE__ ) . 'includes/settings.php';
+require_once plugin_dir_path( __FILE__ ) . 'includes/server-analytics.php';
+
+register_activation_hook( __FILE__, 'agent_monitor_create_files_dir' );
