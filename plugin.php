@@ -5,14 +5,15 @@
  *
  * @package     Agent Monitor
  * @author      Agent Monitor
- * @copyright   2025 Top Online
+ * @copyright   2026 Top Online
  * @license     GPL-2.0
  *
  * @wordpress-plugin
  * Plugin Name:         Agent Monitor
  * Description:         Track AI Agents on Your Website
- * Version:             0.1.1
- * Requires at least:   6.8
+ * Version:             1.0.0
+ * Requires at least:   5.0
+ * Tested up to:        6.9
  * Requires PHP:        7.0
  * Author:              Agent Monitor
  * Author URI:          https://agentmonitor.io/
@@ -26,7 +27,7 @@ if (!defined('ABSPATH')) {
 }
 
 define('AGENT_MONITOR_PLUGIN_FILE', __FILE__);
-define('AGENT_MONITOR_PLUGIN_VERSION', '0.1.1');
+define('AGENT_MONITOR_PLUGIN_VERSION', '1.0.0');
 
 require_once plugin_dir_path( __FILE__ ) . 'includes/constants.php';
 require_once plugin_dir_path( __FILE__ ) . 'includes/file-system.php';
