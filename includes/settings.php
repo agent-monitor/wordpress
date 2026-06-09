@@ -31,7 +31,7 @@ function agent_monitor_register_settings() {
         'description'       => __( 'Maximum size of the visit log file in megabytes before new visits are dropped.', 'agent-monitor' ),
         'sanitize_callback' => 'agent_monitor_sanitize_log_max_size',
         'show_in_rest'      => false,
-        'default'           => 32,
+        'default'           => 16,
     ) );
 }
 
@@ -255,12 +255,25 @@ function agent_monitor_page() {
                         />
                         <?php esc_html_e( 'Enable Analytics', 'agent-monitor' ); ?>
                     </label>
-                    <p style="margin-top: 16px">Realtime activity can be seen on <a href="https://app.agentmonitor.io/" target="_blank">your dashboard</a> within a few seconds.</p>
+                    <p>Realtime activity can be seen on <a href="https://app.agentmonitor.io/" target="_blank">your dashboard</a> within a few seconds.</p>
+                    <?php $flush_time = agent_monitor_last_flush_time(); ?>
+                    <p class="muted" style="margin-top: 16px; font-size: 13px;">
+                        <?php if ( $flush_time ): ?>
+                            <?php
+                            printf(
+                                esc_html__( 'Last event upload: %s ago', 'agent-monitor' ),
+                                esc_html( human_time_diff( $flush_time ) )
+                            );
+                            ?>
+                        <?php else: ?>
+                            <?php esc_html_e( 'No event data has been uploaded yet.', 'agent-monitor' ); ?>
+                        <?php endif; ?>
+                    </p>
                 </div>
                 <div class="section">
                     <h2>Collection Settings</h2>
                     <label class="field-label" for="<?php echo esc_attr( AGENT_MONITOR_LOG_MAX_SIZE ); ?>">
-                        <?php esc_html_e( 'Maximum log file size', 'agent-monitor' ); ?>: <output id="agent-monitor-log-max-size-output"><?php echo esc_html( get_option( AGENT_MONITOR_LOG_MAX_SIZE, 32 ) ); ?></output> MB
+                        <?php esc_html_e( 'Maximum log file size', 'agent-monitor' ); ?>: <output id="agent-monitor-log-max-size-output"><?php echo esc_html( get_option( AGENT_MONITOR_LOG_MAX_SIZE ) ); ?></output> MB
                     </label>
                     <input
                         type="range"
@@ -269,7 +282,7 @@ function agent_monitor_page() {
                         min="<?php echo esc_attr( (int) ( AGENT_MONITOR_EVENT_LOG_SIZE_MIN / MB_IN_BYTES ) ); ?>"
                         max="<?php echo esc_attr( (int) ( AGENT_MONITOR_EVENT_LOG_SIZE_MAX / MB_IN_BYTES ) ); ?>"
                         step="8"
-                        value="<?php echo esc_attr( get_option( AGENT_MONITOR_LOG_MAX_SIZE, 32 ) ); ?>"
+                        value="<?php echo esc_attr( get_option( AGENT_MONITOR_LOG_MAX_SIZE ) ); ?>"
                         oninput="document.getElementById('agent-monitor-log-max-size-output').value = this.value"
                     />
                 </div>
