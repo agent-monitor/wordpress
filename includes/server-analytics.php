@@ -7,7 +7,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 function agent_monitor_track_visit() {
     if ( is_admin() || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) return;
 
-    // @todo: Ensure collection enabled
+    if ( ! agent_monitor_is_enabled() ) return;
 
     $req_path = isset( $_SERVER['REQUEST_URI'] ) ? sanitize_url( wp_unslash( $_SERVER['REQUEST_URI'] ), PHP_URL_PATH ) : "";
     if ( ! $req_path || agent_monitor_is_system_request( $req_path ) ) return;
@@ -15,22 +15,25 @@ function agent_monitor_track_visit() {
     $req_method = isset( $_SERVER['REQUEST_METHOD'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_METHOD'] ) ) : "";
     if ( ! $req_method ) return;
 
-    $req_headers    = agent_monitor_get_request_headers();
-    $req_query      = isset( $_SERVER['QUERY_STRING'] ) ? sanitize_text_field( wp_unslash( $_SERVER['QUERY_STRING'] ) ) : "";
-    $req_time       = isset( $_SERVER['REQUEST_TIME_FLOAT'] ) ? (int) ( floatval( $_SERVER['REQUEST_TIME_FLOAT'] ) * 1000 ) : time() * 1000;
+    $req_query          = isset( $_SERVER['QUERY_STRING'] ) ? wp_unslash( $_SERVER['QUERY_STRING'] ) : "";
+    $req_headers        = agent_monitor_get_request_headers();
     $req_http_ver_parts = isset( $_SERVER['SERVER_PROTOCOL'] ) ? explode( '/', sanitize_text_field( wp_unslash( $_SERVER['SERVER_PROTOCOL'] ) ) ) : [];
     $req_http_ver       = $req_http_ver_parts[1] ?? "";
-
-    $res_status_code = http_response_code();
+    $req_time           = (int) ( WP_START_TIMESTAMP * 1000 );
+    $res_status_code    = http_response_code();
+    $res_time           = (int) ( microtime( true ) * 1000 );
+    $duration_ms        = $res_time - $req_time;
 
     $payload = array(
-        'req_query'         => $req_query,
         'req_path'          => $req_path,
         'req_method'        => $req_method,
-        'req_time'          => $req_time,
+        'req_query'         => $req_query,
         'req_headers'       => $req_headers,
         'req_http_version'  => $req_http_ver,
+        'req_time'          => $req_time,
         'res_status_code'   => $res_status_code,
+        'res_time'          => $res_time,
+        'duration_ms'       => $duration_ms,
         'source'            => 'wordpress/' . AGENT_MONITOR_PLUGIN_VERSION,
     );
 
@@ -41,14 +44,15 @@ function agent_monitor_track_visit() {
 add_action( 'shutdown', 'agent_monitor_track_visit' );
 
 function agent_monitor_append_to_log( array $visit ) {
-    $file_size     = file_exists( AGENT_MONITOR_VISITS_LOG_PATH ) ? filesize( AGENT_MONITOR_VISITS_LOG_PATH ) : 0;
-    $log_max_bytes = (int) get_option( AGENT_MONITOR_LOG_MAX_SIZE, 32 ) * 1048576;
+    $file_size     = file_exists( AGENT_MONITOR_EVENT_LOG_PATH ) ? filesize( AGENT_MONITOR_EVENT_LOG_PATH ) : 0;
+    $log_max_bytes = min( max( (int) get_option( AGENT_MONITOR_LOG_MAX_SIZE ) * MB_IN_BYTES, AGENT_MONITOR_EVENT_LOG_SIZE_MIN ), AGENT_MONITOR_EVENT_LOG_SIZE_MAX );
 
     if ( $file_size >= $log_max_bytes ) {
+        agent_monitor_upload_visit( $visit );
         return;
     }
 
-    $file_handle = fopen( AGENT_MONITOR_VISITS_LOG_PATH, 'a' );
+    $file_handle = fopen( AGENT_MONITOR_EVENT_LOG_PATH, 'a' );
 
     if ( $file_handle === false ) {
         return;
@@ -56,6 +60,7 @@ function agent_monitor_append_to_log( array $visit ) {
 
     if ( ! flock( $file_handle, LOCK_EX | LOCK_NB ) ) {
         fclose( $file_handle );
+        agent_monitor_upload_visit( $visit );
         return;
     }
 
@@ -65,16 +70,30 @@ function agent_monitor_append_to_log( array $visit ) {
 }
 
 function agent_monitor_upload_log_if_needed() {
-    $last_upload = get_option( AGENT_MONITOR_LAST_LOG_UPLOAD, 0 );
+    clearstatcache( true, AGENT_MONITOR_EVENT_LOG_FLUSH_PATH );
+    $last_flush = agent_monitor_last_flush_time() ?: 0;
 
-    if ( ( time() - $last_upload ) > AGENT_MONITOR_LOG_UPLOAD_INTERVAL ) {
-        update_option( AGENT_MONITOR_LAST_LOG_UPLOAD, time(), false );
+    if ( ( time() - $last_flush ) > AGENT_MONITOR_EVENT_LOG_FLUSH_INTERVAL ) {
+        touch( AGENT_MONITOR_EVENT_LOG_FLUSH_PATH );
         agent_monitor_upload_log();
     }
 }
 
+function agent_monitor_upload_visit( array $visit ) {
+    $token = get_option( AGENT_MONITOR_TOKEN );
+
+    wp_remote_post( 'https://ingest.eu.agentmonitor.io/', array(
+        'headers' => array(
+            'Authorization' => 'Bearer ' . $token,
+            'Content-Type'  => 'application/json',
+        ),
+        'body'     => wp_json_encode( $visit ),
+        'blocking' => false,
+    ) );
+}
+
 function agent_monitor_upload_log() {
-    $file_handle = fopen( AGENT_MONITOR_VISITS_LOG_PATH, 'r+' );
+    $file_handle = fopen( AGENT_MONITOR_EVENT_LOG_PATH, 'r+' );
 
     if ( $file_handle === false ) {
         return;
@@ -198,15 +217,15 @@ function agent_monitor_get_request_header_value( $header_name ) {
     $server_key_with_http_prefix = 'HTTP_' . $server_key;
 
     if ( isset( $_SERVER[ $server_key ] ) ) {
-        return sanitize_text_field( wp_unslash( $_SERVER[ $server_key ] ) );
+        return wp_unslash( $_SERVER[ $server_key ] );
     } elseif ( isset( $_SERVER[ $server_key_with_http_prefix ] ) ) {
-        return sanitize_text_field( wp_unslash( $_SERVER[ $server_key_with_http_prefix ] ) );
+        return wp_unslash( $_SERVER[ $server_key_with_http_prefix ] );
     } elseif ( function_exists( 'getallheaders' ) ) {
         $headers_with_lowercase_keys = array_change_key_case( getallheaders(), CASE_LOWER );
         $lowercased_header_name      = strtolower( $header_name );
 
-        if (isset($headers_with_lowercase_keys[$lowercased_header_name])) {
-            return sanitize_text_field($headers_with_lowercase_keys[$lowercased_header_name]);
+        if ( isset( $headers_with_lowercase_keys[ $lowercased_header_name ] ) ) {
+            return $headers_with_lowercase_keys[ $lowercased_header_name ];
         } else {
             return null;
         }
