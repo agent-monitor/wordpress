@@ -260,6 +260,7 @@ function agent_monitor_page() {
                     <p class="muted" style="margin-top: 16px; font-size: 13px;">
                         <?php if ( $flush_time ): ?>
                             <?php
+                            /* translators: %s: human-readable time difference, e.g. "2 minutes" */
                             printf(
                                 esc_html__( 'Last event upload: %s ago', 'agent-monitor' ),
                                 esc_html( human_time_diff( $flush_time ) )
