@@ -292,7 +292,7 @@ function agent_monitor_page() {
             </div>
         </form>
         <div class="muted">
-            If you are using plugins that generate cached versions of your pages (e.g., LiteSpeed Cache, WP Rocket), Agent Monitor will not be able to track these pages reliably. If that's the case, consider a different integration.
+            <strong>Important:</strong> If you are using plugins that generate cached versions of your pages (e.g., LiteSpeed Cache, WP Rocket), Agent Monitor will not be able to track these pages reliably. If that's the case, consider a different integration.
         </div>
     </div>
     <?php
