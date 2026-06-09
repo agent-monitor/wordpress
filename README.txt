@@ -1,27 +1,28 @@
 === Agent Monitor ===
 Contributors: wirkijowski, agentmonitor
-Tags: crawlers, scrapers, analytics
-Tested up to: 6.8
+Tags: analytics, ai mentions, ai visibility
+Requires at least: 5.0
+Tested up to: 7.0
 Requires PHP: 7.0
-Stable tag: 0.1.1
+Stable tag: 1.0.0
 License: GPL-2.0
 License URI: https://www.gnu.org/licenses/gpl-2.0.txt
 
 Track AI Agents on Your Website. Agent Monitor helps you understand how AI agents, crawlers, and scrapers interact with your website.
 
 == Description ==
+
 Agent Monitor helps you understand how AI agents, crawlers, and scrapers interact with your website. By tracking these non-human visitors, you can gain insights into how your site is being indexed, analyzed, and used by automated systems. Our dashboard provides detailed analytics on which agents are visiting, what pages they access, and how frequently they return.
 
 This plugin connects your WordPress site to the Agent Monitor service. You will need a free account and an access token to begin collecting data.
 
 == Installation ==
-We are currently in Closed Beta. If you do not have an account yet, [join the waitlist](https://agentmonitor.io/). We're working letting more people in :)
 
-1. Install and activate the Agent Monitor plugin form the WordPress Plugin Directory
+1. Install and activate the Agent Monitor plugin from the WordPress Plugin Directory.
 2. [Log in](https://app.agentmonitor.io) to Agent Monitor and create a new site.
 3. Copy your site\'s access token from the [integration](https://app.agentmonitor.io/integrate) page, then paste it into the access token field on the plugin\'s configuration page and save.
 
-That's it, wait for the traffic data to flow in!
+That\'s it — wait for the traffic data to flow in!
 
 == License ==
 Copyright (C) 2025 Top Online
