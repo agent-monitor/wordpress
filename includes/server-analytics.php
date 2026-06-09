@@ -45,7 +45,7 @@ add_action( 'shutdown', 'agent_monitor_track_visit' );
 
 function agent_monitor_append_to_log( array $visit ) {
     $file_size     = file_exists( AGENT_MONITOR_EVENT_LOG_PATH ) ? filesize( AGENT_MONITOR_EVENT_LOG_PATH ) : 0;
-    $log_max_bytes = min( max( (int) get_option( AGENT_MONITOR_LOG_MAX_SIZE ) * MB_IN_BYTES, AGENT_MONITOR_EVENT_LOG_SIZE_MIN ), AGENT_MONITOR_EVENT_LOG_SIZE_MAX );
+    $log_max_bytes = min( max( (int) get_option( AGENT_MONITOR_LOG_MAX_SIZE, 16 ) * MB_IN_BYTES, AGENT_MONITOR_EVENT_LOG_SIZE_MIN ), AGENT_MONITOR_EVENT_LOG_SIZE_MAX );
 
     if ( $file_size >= $log_max_bytes ) {
         agent_monitor_upload_visit( $visit );
