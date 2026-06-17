@@ -1,4 +1,4 @@
-=== Agent Monitor ===
+=== Agent Monitor - Monitor AI Agents and analyze LLM visibility ===
 Contributors: wirkijowski, agentmonitor
 Tags: analytics, ai mentions, ai visibility
 Requires at least: 5.0
