@@ -10,7 +10,6 @@
  *
  * @wordpress-plugin
  * Plugin Name:         Agent Monitor - Monitor AI Agents and analyze LLM visibility
- * Plugin URI:          https://agentmonitor.io/
  * Description:         Track LLM assistants, crawlers and autonomous agents visiting your site. Analyze LLM visibility.
  * Version:             1.0.0
  * Requires at least:   5.0
