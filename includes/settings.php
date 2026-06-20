@@ -58,6 +58,23 @@ function agent_monitor_menu() {
 
 add_action('admin_menu', 'agent_monitor_menu');
 
+function agent_monitor_enqueue_settings_styles( $hook ) {
+    if ( $hook !== 'toplevel_page_agent-monitor' ) {
+        return;
+    }
+
+    wp_register_style(
+        'agent-monitor-settings',
+        plugin_dir_url( __FILE__ ) . '../assets/css/main.css',
+        [],
+        AGENT_MONITOR_PLUGIN_VERSION
+    );
+    wp_enqueue_style( 'agent-monitor-settings' );
+
+}
+
+add_action( 'admin_enqueue_scripts', 'agent_monitor_enqueue_settings_styles' );
+
 function agent_monitor_page() {
     // Prevent unauthorized access
     if ( ! current_user_can( 'manage_options' ) ) {
@@ -73,135 +90,6 @@ function agent_monitor_page() {
     settings_errors( 'agent_monitor_messages' );
 
     ?>
-    <style>
-        #wpwrap {
-            background: #fafafa;
-        }
-
-        #agent-monitor-page h1,
-        #agent-monitor-page h2,
-        #agent-monitor-page h3,
-        #agent-monitor-page h4,
-        #agent-monitor-page h5,
-        #agent-monitor-page h6,
-        #agent-monitor-page p {
-            margin: 16px 0;
-        }
-
-        #agent-monitor-page h1:first-child,
-        #agent-monitor-page h2:first-child,
-        #agent-monitor-page h3:first-child,
-        #agent-monitor-page h4:first-child,
-        #agent-monitor-page h5:first-child,
-        #agent-monitor-page h6:first-child,
-        #agent-monitor-page p:first-child {
-            margin-top: 0;
-        }
-
-        #agent-monitor-page h1:last-child,
-        #agent-monitor-page h2:last-child,
-        #agent-monitor-page h3:last-child,
-        #agent-monitor-page h4:last-child,
-        #agent-monitor-page h5:last-child,
-        #agent-monitor-page h6:last-child,
-        #agent-monitor-page p:last-child {
-            margin-bottom: 0;
-        }
-
-        #agent-monitor-page .button,
-        #agent-monitor-page [class*=button-],
-        #agent-monitor-page input:not([type="checkbox"]) {
-            border-radius: 8px;
-        }
-
-        #agent-monitor-page .muted {
-            opacity: 0.8;
-        }
-
-        #agent-monitor-page {
-            padding: 32px;
-            max-width: 640px;
-            margin: 0 auto;
-            display: flex;
-            flex-direction: column;
-            gap: 24px;
-        }
-
-        #agent-monitor-page .header {
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        #agent-monitor-page .header .head {
-            display: flex;
-            flex-direction: row;
-            justify-content: space-between;
-            align-items: center;
-            gap: 16px;
-        }
-
-        #agent-monitor-page .header .head .logo {
-            height: 24px;
-        }
-
-        #agent-monitor-page form {
-            background: #fff;
-            border: 1px solid #e5e5e5;
-            border-radius: 14px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        #agent-monitor-page form .content .section {
-            border-bottom: 1px solid #e5e5e5;
-            padding: 24px;
-        }
-
-        #agent-monitor-page form .foot {
-            display: flex;
-            flex-direction: row;
-            justify-content: end;
-            padding: 24px;
-        }
-
-
-        #agent-monitor-page p:first-child {
-            margin-top: 0;
-        }
-
-        #agent-monitor-page p:last-child {
-            margin-bottom: 0;
-        }
-
-
-
-        #agent-monitor-page form .card-footer {
-            display: flex;
-            justify-content: end;
-        }
-
-        #agent-monitor-page form <?php echo esc_attr('#'.AGENT_MONITOR_TOKEN); ?> {
-            width: 100%;
-            line-height: 32px;
-            padding: 0 8px;
-            border: 1px solid #e5e5e5;
-        }
-
-        #agent-monitor-page form input[type=submit] {
-            padding: 0 16px;
-            line-height: 32px;
-        }
-
-        #agent-monitor-page form .field-label {
-            display: block;
-            margin-bottom: 8px;
-        }
-
-        #agent-monitor-page form input[type=range] {
-            width: 100%;
-        }
-    </style>
     <div id="agent-monitor-page">
         <div class="header">
             <div class="head">
