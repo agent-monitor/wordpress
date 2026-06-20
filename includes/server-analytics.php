@@ -15,7 +15,7 @@ function agent_monitor_track_visit() {
     $req_method = isset( $_SERVER['REQUEST_METHOD'] ) ? sanitize_text_field( wp_unslash( $_SERVER['REQUEST_METHOD'] ) ) : "";
     if ( ! $req_method ) return;
 
-    $req_query          = isset( $_SERVER['QUERY_STRING'] ) ? wp_unslash( $_SERVER['QUERY_STRING'] ) : "";
+    $req_query          = isset( $_SERVER['QUERY_STRING'] ) ? sanitize_text_field( wp_unslash( $_SERVER['QUERY_STRING'] ) ) : "";
     $req_headers        = agent_monitor_get_request_headers();
     $req_http_ver_parts = isset( $_SERVER['SERVER_PROTOCOL'] ) ? explode( '/', sanitize_text_field( wp_unslash( $_SERVER['SERVER_PROTOCOL'] ) ) ) : [];
     $req_http_ver       = $req_http_ver_parts[1] ?? "";
@@ -217,15 +217,15 @@ function agent_monitor_get_request_header_value( $header_name ) {
     $server_key_with_http_prefix = 'HTTP_' . $server_key;
 
     if ( isset( $_SERVER[ $server_key ] ) ) {
-        return wp_unslash( $_SERVER[ $server_key ] );
+        return sanitize_text_field( wp_unslash( $_SERVER[ $server_key ] ) );
     } elseif ( isset( $_SERVER[ $server_key_with_http_prefix ] ) ) {
-        return wp_unslash( $_SERVER[ $server_key_with_http_prefix ] );
+        return sanitize_text_field( wp_unslash( $_SERVER[ $server_key_with_http_prefix ] ) );
     } elseif ( function_exists( 'getallheaders' ) ) {
         $headers_with_lowercase_keys = array_change_key_case( getallheaders(), CASE_LOWER );
         $lowercased_header_name      = strtolower( $header_name );
 
         if ( isset( $headers_with_lowercase_keys[ $lowercased_header_name ] ) ) {
-            return $headers_with_lowercase_keys[ $lowercased_header_name ];
+            return sanitize_text_field( $headers_with_lowercase_keys[ $lowercased_header_name ] );
         } else {
             return null;
         }
