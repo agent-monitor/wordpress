@@ -6,7 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 // General
 
-define( 'AGENT_MONITOR_PLUGIN_VERSION', '1.0.0' );
+define( 'AGENT_MONITOR_PLUGIN_VERSION', '1.0.1' );
 define( 'AGENT_MONITOR_FILES_DIR', wp_upload_dir()['basedir'] . '/agent-monitor' );
 
 // Option groups
