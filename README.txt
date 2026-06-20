@@ -1,6 +1,6 @@
 === Agent Monitor - Monitor AI Agents and analyze LLM visibility ===
 Contributors: wirkijowski, agentmonitor
-Tags: analytics, ai mentions, ai visibility
+Tags: analytics, ai mentions, visibility, geo, seo
 Requires at least: 5.0
 Tested up to: 7.0
 Requires PHP: 7.0
