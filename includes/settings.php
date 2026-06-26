@@ -9,8 +9,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 function agent_monitor_register_settings() {
     register_setting( AGENT_MONITOR_OPTION_GROUP, AGENT_MONITOR_IS_ENABLED, array(
         'type'              => 'boolean',
-        'label'             => __( 'Enable Analytics', 'agent-monitor' ),
-        'description'       => __( 'Whether visit tracking is enabled.', 'agent-monitor' ),
+        'label'             => __( 'Enable Analytics', 'agentmonitor' ),
+        'description'       => __( 'Whether visit tracking is enabled.', 'agentmonitor' ),
         'sanitize_callback' => 'rest_sanitize_boolean',
         'show_in_rest'      => false,
         'default'           => true,
@@ -18,8 +18,8 @@ function agent_monitor_register_settings() {
 
     register_setting( AGENT_MONITOR_OPTION_GROUP, AGENT_MONITOR_TOKEN, array(
         'type'              => 'string',
-        'label'             => __( 'Site Token', 'agent-monitor' ),
-        'description'       => __( 'The access token linking this site to your Agent Monitor site.', 'agent-monitor' ),
+        'label'             => __( 'Site Token', 'agentmonitor' ),
+        'description'       => __( 'The access token linking this site to your Agent Monitor site.', 'agentmonitor' ),
         'sanitize_callback' => 'sanitize_text_field',
         'show_in_rest'      => false,
         'default'           => '',
@@ -27,8 +27,8 @@ function agent_monitor_register_settings() {
 
     register_setting( AGENT_MONITOR_OPTION_GROUP, AGENT_MONITOR_LOG_MAX_SIZE, array(
         'type'              => 'integer',
-        'label'             => __( 'Maximum Log Size', 'agent-monitor' ),
-        'description'       => __( 'Maximum size of the visit log file in megabytes before new visits are dropped.', 'agent-monitor' ),
+        'label'             => __( 'Maximum Log Size', 'agentmonitor' ),
+        'description'       => __( 'Maximum size of the visit log file in megabytes before new visits are dropped.', 'agentmonitor' ),
         'sanitize_callback' => 'agent_monitor_sanitize_log_max_size',
         'show_in_rest'      => false,
         'default'           => 16,
@@ -51,7 +51,7 @@ function agent_monitor_menu() {
         'Agent Monitor',
         'Agent Monitor',
         'manage_options',
-        'agent-monitor',
+        'agentmonitor',
         'agent_monitor_page'
     );
 }
@@ -59,17 +59,17 @@ function agent_monitor_menu() {
 add_action('admin_menu', 'agent_monitor_menu');
 
 function agent_monitor_enqueue_settings_styles( $hook ) {
-    if ( $hook !== 'toplevel_page_agent-monitor' ) {
+    if ( $hook !== 'toplevel_page_agentmonitor' ) {
         return;
     }
 
     wp_register_style(
-        'agent-monitor-settings',
+        'agentmonitor-settings',
         plugin_dir_url( __FILE__ ) . '../assets/css/main.css',
         [],
         AGENT_MONITOR_PLUGIN_VERSION
     );
-    wp_enqueue_style( 'agent-monitor-settings' );
+    wp_enqueue_style( 'agentmonitor-settings' );
 
 }
 
@@ -83,14 +83,14 @@ function agent_monitor_page() {
 
     // Detect updates
     if ( isset( $_GET['settings-updated'] ) ) {
-        add_settings_error( 'agent_monitor_messages', 'agent_monitor_message', __( 'Settings Saved', 'agent-monitor' ), 'updated' );
+        add_settings_error( 'agent_monitor_messages', 'agent_monitor_message', __( 'Settings Saved', 'agentmonitor' ), 'updated' );
     }
 
     // show error/update messages
     settings_errors( 'agent_monitor_messages' );
 
     ?>
-    <div id="agent-monitor-page">
+    <div id="agentmonitor-page">
         <div class="header">
             <div class="head">
                 <svg class="logo" viewBox="0 0 1167 177" xmlns="http://www.w3.org/2000/svg">
@@ -141,7 +141,7 @@ function agent_monitor_page() {
                             value="1"
                             <?php checked( get_option( AGENT_MONITOR_IS_ENABLED, true ) ); ?>
                         />
-                        <?php esc_html_e( 'Enable Analytics', 'agent-monitor' ); ?>
+                        <?php esc_html_e( 'Enable Analytics', 'agentmonitor' ); ?>
                     </label>
                     <p>Realtime activity can be seen on <a href="https://app.agentmonitor.io/" target="_blank">your dashboard</a> within a few seconds.</p>
                     <?php $flush_time = agent_monitor_last_flush_time(); ?>
@@ -150,19 +150,19 @@ function agent_monitor_page() {
                             <?php
                             /* translators: %s: human-readable time difference, e.g. "2 minutes" */
                             printf(
-                                esc_html__( 'Last event upload: %s ago', 'agent-monitor' ),
+                                esc_html__( 'Last event upload: %s ago', 'agentmonitor' ),
                                 esc_html( human_time_diff( $flush_time ) )
                             );
                             ?>
                         <?php else: ?>
-                            <?php esc_html_e( 'No event data has been uploaded yet.', 'agent-monitor' ); ?>
+                            <?php esc_html_e( 'No event data has been uploaded yet.', 'agentmonitor' ); ?>
                         <?php endif; ?>
                     </p>
                 </div>
                 <div class="section">
                     <h2>Collection Settings</h2>
                     <label class="field-label" for="<?php echo esc_attr( AGENT_MONITOR_LOG_MAX_SIZE ); ?>">
-                        <?php esc_html_e( 'Maximum log file size', 'agent-monitor' ); ?>: <output id="agent-monitor-log-max-size-output"><?php echo esc_html( get_option( AGENT_MONITOR_LOG_MAX_SIZE ) ); ?></output> MB
+                        <?php esc_html_e( 'Maximum log file size', 'agentmonitor' ); ?>: <output id="agentmonitor-log-max-size-output"><?php echo esc_html( get_option( AGENT_MONITOR_LOG_MAX_SIZE ) ); ?></output> MB
                     </label>
                     <input
                         type="range"
@@ -172,7 +172,7 @@ function agent_monitor_page() {
                         max="<?php echo esc_attr( (int) ( AGENT_MONITOR_EVENT_LOG_SIZE_MAX / MB_IN_BYTES ) ); ?>"
                         step="8"
                         value="<?php echo esc_attr( get_option( AGENT_MONITOR_LOG_MAX_SIZE ) ); ?>"
-                        oninput="document.getElementById('agent-monitor-log-max-size-output').value = this.value"
+                        oninput="document.getElementById('agentmonitor-log-max-size-output').value = this.value"
                     />
                 </div>
             </div>

@@ -2,47 +2,47 @@
     background: #fafafa;
 }
 
-#agent-monitor-page h1,
-#agent-monitor-page h2,
-#agent-monitor-page h3,
-#agent-monitor-page h4,
-#agent-monitor-page h5,
-#agent-monitor-page h6,
-#agent-monitor-page p {
+#agentmonitor-page h1,
+#agentmonitor-page h2,
+#agentmonitor-page h3,
+#agentmonitor-page h4,
+#agentmonitor-page h5,
+#agentmonitor-page h6,
+#agentmonitor-page p {
     margin: 16px 0;
 }
 
-#agent-monitor-page h1:first-child,
-#agent-monitor-page h2:first-child,
-#agent-monitor-page h3:first-child,
-#agent-monitor-page h4:first-child,
-#agent-monitor-page h5:first-child,
-#agent-monitor-page h6:first-child,
-#agent-monitor-page p:first-child {
+#agentmonitor-page h1:first-child,
+#agentmonitor-page h2:first-child,
+#agentmonitor-page h3:first-child,
+#agentmonitor-page h4:first-child,
+#agentmonitor-page h5:first-child,
+#agentmonitor-page h6:first-child,
+#agentmonitor-page p:first-child {
     margin-top: 0;
 }
 
-#agent-monitor-page h1:last-child,
-#agent-monitor-page h2:last-child,
-#agent-monitor-page h3:last-child,
-#agent-monitor-page h4:last-child,
-#agent-monitor-page h5:last-child,
-#agent-monitor-page h6:last-child,
-#agent-monitor-page p:last-child {
+#agentmonitor-page h1:last-child,
+#agentmonitor-page h2:last-child,
+#agentmonitor-page h3:last-child,
+#agentmonitor-page h4:last-child,
+#agentmonitor-page h5:last-child,
+#agentmonitor-page h6:last-child,
+#agentmonitor-page p:last-child {
     margin-bottom: 0;
 }
 
-#agent-monitor-page .button,
-#agent-monitor-page [class*=button-],
-#agent-monitor-page input:not([type="checkbox"]) {
+#agentmonitor-page .button,
+#agentmonitor-page [class*=button-],
+#agentmonitor-page input:not([type="checkbox"]) {
     border-radius: 8px;
 }
 
-#agent-monitor-page .muted {
+#agentmonitor-page .muted {
     opacity: 0.8;
 }
 
-#agent-monitor-page {
+#agentmonitor-page {
     padding: 32px;
     max-width: 640px;
     margin: 0 auto;
@@ -51,13 +51,13 @@
     gap: 24px;
 }
 
-#agent-monitor-page .header {
+#agentmonitor-page .header {
     display: flex;
     flex-direction: column;
     gap: 16px;
 }
 
-#agent-monitor-page .header .head {
+#agentmonitor-page .header .head {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -65,11 +65,11 @@
     gap: 16px;
 }
 
-#agent-monitor-page .header .head .logo {
+#agentmonitor-page .header .head .logo {
     height: 24px;
 }
 
-#agent-monitor-page form {
+#agentmonitor-page form {
     background: #fff;
     border: 1px solid #e5e5e5;
     border-radius: 14px;
@@ -77,12 +77,12 @@
     flex-direction: column;
 }
 
-#agent-monitor-page form .content .section {
+#agentmonitor-page form .content .section {
     border-bottom: 1px solid #e5e5e5;
     padding: 24px;
 }
 
-#agent-monitor-page form .foot {
+#agentmonitor-page form .foot {
     display: flex;
     flex-direction: row;
     justify-content: end;
@@ -90,36 +90,36 @@
 }
 
 
-#agent-monitor-page p:first-child {
+#agentmonitor-page p:first-child {
     margin-top: 0;
 }
 
-#agent-monitor-page p:last-child {
+#agentmonitor-page p:last-child {
     margin-bottom: 0;
 }
 
-#agent-monitor-page form .field-label {
+#agentmonitor-page form .field-label {
     display: block;
     margin-bottom: 8px;
 }
 
-#agent-monitor-page form .card-footer {
+#agentmonitor-page form .card-footer {
     display: flex;
     justify-content: end;
 }
 
-#agent-monitor-page form input[type=password] {
+#agentmonitor-page form input[type=password] {
     width: 100%;
     line-height: 32px;
     padding: 0 8px;
     border: 1px solid #e5e5e5;
 }
 
-#agent-monitor-page form input[type=submit] {
+#agentmonitor-page form input[type=submit] {
     padding: 0 16px;
     line-height: 32px;
 }
 
-#agent-monitor-page form input[type=range] {
+#agentmonitor-page form input[type=range] {
     width: 100%;
 }

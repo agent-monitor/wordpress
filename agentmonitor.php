@@ -17,7 +17,7 @@
  * Requires PHP:        7.0
  * Author:              Agent Monitor
  * Author URI:          https://agentmonitor.io/
- * Text Domain:         agent-monitor
+ * Text Domain:         agentmonitor
  * License:             GPL-2.0
  * License URI:         https://www.gnu.org/licenses/gpl-2.0.txt
  */
