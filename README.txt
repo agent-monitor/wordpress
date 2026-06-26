@@ -24,6 +24,15 @@ This plugin connects your WordPress site to the Agent Monitor service. You will 
 
 That\'s it — wait for the traffic data to flow in!
 
+== External services ==
+
+This plugin collects and sends visit data to Agent Monitor to allow you to analyze your site's traffic.
+It sends all relevant data about your site's visitors after the request has been processed by WordPress, in a non-blocking way.
+
+You need to input your Agent Monitor token to the plugin's configuration page and enable data collection to send data. No data is sent to Agent Monitor without this.
+
+This service is provided by Top Online Sp. z o.o.: [Terms of Service](https://agentmonitor.io/terms-of-service), [Privacy Policy](https://agentmonitor.io/privacy-policy).
+
 == License ==
 Copyright (C) 2025 Top Online
 
