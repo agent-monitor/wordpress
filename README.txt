@@ -2,7 +2,7 @@
 Contributors: wirkijowski, agentmonitor
 Tags: analytics, ai mentions, visibility, geo, seo
 Requires at least: 5.0
-Tested up to: 7.0
+Tested up to: 7.1
 Requires PHP: 7.0
 Stable tag: 1.0.1
 License: GPL-2.0

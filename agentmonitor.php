@@ -13,7 +13,7 @@
  * Description:         Track LLM assistants, crawlers and autonomous agents visiting your site. Analyze LLM visibility.
  * Version:             1.0.1
  * Requires at least:   5.0
- * Tested up to:        7.0
+ * Tested up to:        7.1
  * Requires PHP:        7.0
  * Author:              Agent Monitor
  * Author URI:          https://agentmonitor.io/
